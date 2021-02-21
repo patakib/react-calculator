@@ -7,10 +7,10 @@ class App extends React.Component {
   constructor() {
     super();
     this.state = {
-      input: '',
+      input: '0',
       currentNum: '',
       operators: ["+","-","/","*"],
-      result: ''
+      result: '0'
     };
     this.newDigit = this.newDigit.bind(this)
     this.clearInput = this.clearInput.bind(this)
@@ -20,52 +20,66 @@ class App extends React.Component {
     this.evaluate = this.evaluate.bind(this)
   }
   newDigit = (event) => {
-    if (this.state.currentNum.slice(0,1)!=="0" || this.state.currentNum.slice(1,2)===".") {
+    if (this.state.input==='0') {
       this.setState({
-        input: this.state.input+event.target.value
-      });
-      if (this.state.currentNum==='') {
+        input: event.target.value,
+        currentNum: event.target.value
+      })
+    } else {
         this.setState({
-          currentNum: event.target.value
-        });
-      }
-      else {
-        this.setState({
+          input: this.state.input+event.target.value,
           currentNum: this.state.currentNum+event.target.value
-        });
-      }
+        })
     }
+    return this.state.input
   };
   clearInput = () => {
     this.setState({
-      input: '',
+      input: '0',
       currentNum: '',
       result: ''
     });
   };
   handleOperator = (event) => {
-    if (!this.state.operators.includes(this.state.input.slice(-1))) {
+    if (!this.state.operators.includes(this.state.input.slice(-1)) && this.state.input.slice(-1)!=='.') {
       this.setState({
         input: this.state.input+event.target.value,
         currentNum: ''
       });
-    } else {
+    }
+    else if (this.state.operators.includes(this.state.input.slice(-1)) && this.state.operators.includes(this.state.input.slice(-2,-1))) {
       this.setState({
-        input: this.state.input
+        input: this.state.input.slice(0,-2)+event.target.value,
+      });
+    }
+    else {
+      this.setState({
+        input: this.state.input.slice(0,-1)+event.target.value
       });
     }
   }
   handleMinus = (event) => {
-    if (this.state.operators.includes(this.state.input.slice(-2,-1)) && this.state.operators.includes(this.state.input.slice(-1))) {
-    } else {
+    if (this.state.input.slice(-2,-1)==='-' && this.state.input.slice(-1)==='-') {
+    }
+    if (this.state.operators.includes(this.state.input.slice(-1)) && this.state.input.slice(-1)!=='-') {
       this.setState({
         input: this.state.input+event.target.value,
-      });
-      if (this.state.operators.includes(this.state.input.slice(-1)) && event.target.value==="-") {
-        this.setState({
-          currentNum: event.target.value
-        });
-      }
+        currentNum: ''
+      })
+    }
+    if (this.state.input.slice(-1)==='-' && this.state.input.slice(-2,-1)!=='-') {
+      this.setState({
+        input: this.state.input+event.target.value,
+        currentNum: ''
+      })
+    }
+    if (this.state.input.slice(-1)==='.') {
+    }
+    if (!this.state.operators.includes(this.state.input.slice(-1))) {
+      this.setState({
+        input: this.state.input+event.target.value,
+        currentNum: ''
+      })
     }
   }
   handleDecimal = (event) => {
@@ -78,9 +92,10 @@ class App extends React.Component {
   }
   evaluate = (event) => {
     this.setState({
-      result: eval(this.state.input)
+      result: eval(this.state.input.replace('--','+')),
+      input: eval(this.state.input.replace('--','+')).toString()
     });
-  }
+  };
   render() {
     return (
       <div>
