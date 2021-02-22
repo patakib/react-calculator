@@ -1,3 +1,8 @@
+# Calculator App
+This application has been developed with React, html and css.  
+You can do basic mathematical operations with it.  
+The deployed app is available [here](https://react-calculator-app-fcc.herokuapp.com/).
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
